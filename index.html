@@ -3,122 +3,295 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personal Space & Live Clock</title>
-  <meta name="description" content="A modern, personal glassmorphic space featuring live high-precision clock, customizable name, and dynamic greeting.">
+  <title>吳奕霆 • 個人入口網站 & 極光動態時鐘 (L2Web)</title>
+  <meta name="description" content="Personal portal and live dynamic timekeeper for 吳奕霆, featuring AIoT project showcase, ambient glassmorphism, and responsive design.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <!-- Ambient background glow elements -->
-  <div class="ambient-glow orb-1" id="orb1"></div>
-  <div class="ambient-glow orb-2" id="orb2"></div>
-  <div class="ambient-glow orb-3" id="orb3"></div>
-  <div class="mesh-grid"></div>
+<body data-theme="aurora">
+  <!-- Ambient Aurora Lighting Effects -->
+  <div class="ambient-glow orb-1" aria-hidden="true"></div>
+  <div class="ambient-glow orb-2" aria-hidden="true"></div>
+  <div class="ambient-glow orb-3" aria-hidden="true"></div>
+  <div class="grid-overlay" aria-hidden="true"></div>
 
-  <main class="app-container">
-    <div class="glass-card" id="glassCard">
-      <!-- Top header bar -->
-      <header class="card-header">
-        <div class="greeting-badge" id="greetingBadge">
-          <span class="greeting-icon" id="greetingIcon">✨</span>
-          <span class="greeting-text" id="greetingText">Good Evening</span>
+  <main class="app-container" id="app">
+    <!-- Top Bar Navigation & Status -->
+    <header class="top-nav" id="topNav">
+      <!-- Live Status Indicator -->
+      <div class="status-indicator">
+        <span class="pulse-dot"></span>
+        <span class="status-label" id="statusLabel">Live • Taipei Time (UTC+8)</span>
+      </div>
+
+      <!-- Quick Action Navigation Controls -->
+      <div class="nav-controls">
+        <!-- Ambient Sound Toggle (Web Audio API) -->
+        <button id="soundToggleBtn" class="icon-btn" title="Toggle clock tick sound" aria-label="Toggle clock sound">
+          <svg class="icon sound-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+          <svg class="icon sound-on-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span class="btn-tooltip">Sound (Muted)</span>
+        </button>
+
+        <!-- Theme Switcher -->
+        <button id="themeToggleBtn" class="icon-btn" title="Cycle visual theme" aria-label="Cycle visual theme">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          </svg>
+          <span class="btn-tooltip" id="themeTooltip">Theme: Aurora</span>
+        </button>
+
+        <!-- Zen / Focus Mode Toggle -->
+        <button id="zenModeBtn" class="icon-btn" title="Toggle Zen Mode (Shortcut: Z)" aria-label="Toggle Zen mode">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+          <span class="btn-tooltip">Zen Mode (Z)</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Glass Hero Card -->
+    <section class="glass-card" id="mainCard">
+      <!-- Identity & Greeting Section -->
+      <div class="profile-header">
+        <div class="avatar-ring">
+          <div class="avatar-monogram" id="avatarInitials">YT</div>
+        </div>
+        <div class="profile-info">
+          <div class="greeting-badge" id="greetingBadge">
+            <span class="greeting-icon" id="greetingIcon">✨</span>
+            <span class="greeting-text" id="greetingText">Good evening</span>
+          </div>
+          <div class="name-wrapper">
+            <h1 class="user-name" id="userName" title="Click to edit name" tabindex="0">吳奕霆</h1>
+            <button class="edit-btn" id="editNameBtn" title="Edit name" aria-label="Edit name">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+          </div>
+          <p class="user-tagline" id="userTagline" title="Click to edit title" tabindex="0">AIoT Pioneer • Instructor</p>
+        </div>
+      </div>
+
+      <!-- Hero Dynamic Clock Display -->
+      <div class="clock-display-container">
+        <!-- SVG Radial Seconds Progress Ring -->
+        <svg class="progress-ring" viewBox="0 0 360 360" aria-hidden="true">
+          <circle class="progress-ring-bg" cx="180" cy="180" r="162" />
+          <circle class="progress-ring-circle" id="progressRing" cx="180" cy="180" r="162" />
+        </svg>
+
+        <!-- Digital Numbers -->
+        <div class="digital-clock" id="digitalClock" aria-live="polite">
+          <div class="time-block">
+            <span class="time-num" id="hours">20</span>
+            <span class="time-label">HOURS</span>
+          </div>
+          <span class="time-separator" id="colon1">:</span>
+          <div class="time-block">
+            <span class="time-num" id="minutes">30</span>
+            <span class="time-label">MINUTES</span>
+          </div>
+          <span class="time-separator" id="colon2">:</span>
+          <div class="time-block">
+            <span class="time-num" id="seconds">00</span>
+            <span class="time-label">SECONDS</span>
+          </div>
+          <div class="time-meridiem" id="meridiemContainer">
+            <span class="meridiem-tag" id="meridiem">PM</span>
+          </div>
         </div>
 
-        <div class="header-controls">
-          <button class="control-btn" id="formatToggleBtn" aria-label="Toggle 12/24 hour time format" title="Toggle 12h / 24h format">
-            <span class="toggle-pill" id="formatLabel">12H</span>
-          </button>
-          <button class="control-btn icon-only" id="copyTimeBtn" aria-label="Copy current time" title="Copy time to clipboard">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- High-Precision Subbar -->
+        <div class="clock-subbar">
+          <span class="epoch-label">UNIX: <span id="epochTime">1726500000</span></span>
+          <span class="divider-dot">•</span>
+          <span class="ms-label"><span id="milliseconds">000</span> ms</span>
+        </div>
+      </div>
+
+      <!-- Date & Status Badges -->
+      <div class="calendar-strip">
+        <div class="date-full" id="fullDate">Wednesday, September 16, 2026</div>
+        <div class="date-badges">
+          <span class="date-pill" id="weekBadge">Week 38</span>
+          <span class="date-pill" id="dayOfYearBadge">Day 259</span>
+          <span class="date-pill" id="timezoneBadge">UTC+8</span>
+        </div>
+      </div>
+
+      <!-- Drawer Portals Navigation Bar -->
+      <nav class="portal-nav" aria-label="Sections Explorer">
+        <button class="portal-btn" id="openProjectsBtn" data-target-tab="projects">
+          <span class="portal-icon">📂</span>
+          <span class="portal-label">Projects</span>
+          <span class="portal-counter" id="projectsCount">4</span>
+        </button>
+        <button class="portal-btn" id="openAboutBtn" data-target-tab="about">
+          <span class="portal-icon">👤</span>
+          <span class="portal-label">About</span>
+        </button>
+        <button class="portal-btn" id="openConnectBtn" data-target-tab="connect">
+          <span class="portal-icon">🔗</span>
+          <span class="portal-label">Connect</span>
+        </button>
+      </nav>
+
+      <!-- Bottom Action Toolbar -->
+      <div class="toolbar" id="toolbar">
+        <div class="format-switcher">
+          <button class="toggle-pill active" id="btn24h" data-format="24">24H</button>
+          <button class="toggle-pill" id="btn12h" data-format="12">12H</button>
+        </div>
+
+        <div class="action-buttons">
+          <button class="action-btn" id="copyTimeBtn" title="Copy current timestamp (Shortcut: C)">
+            <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
-            <span class="tooltip" id="copyTooltip">Copy time</span>
+            <span id="copyBtnText">Copy Time</span>
           </button>
         </div>
-      </header>
+      </div>
+    </section>
 
-      <!-- Personal Identity Section -->
-      <section class="identity-section">
-        <div class="welcome-pre">Welcome to the personal space of</div>
-        <div class="name-display-wrapper" id="nameWrapper" tabindex="0" role="button" aria-label="Click or press Enter to edit your name">
-          <h1 class="user-name" id="userName" title="Click to edit your name">吳奕霆</h1>
-          <button class="edit-name-btn" id="editNameBtn" aria-label="Edit name" title="Edit your name">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20h9"></path>
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-            </svg>
-          </button>
+    <!-- Slide-Out Glass Drawer (Portfolio Explorer) -->
+    <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+    <aside class="drawer-panel" id="drawerPanel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <div class="drawer-header">
+        <div class="drawer-tabs">
+          <button class="drawer-tab active" data-tab="projects">Projects</button>
+          <button class="drawer-tab" data-tab="about">About</button>
+          <button class="drawer-tab" data-tab="connect">Connect</button>
         </div>
-        <p class="edit-hint" id="editHint">Click the name or pencil icon to personalize</p>
-
-        <!-- Hidden input form for inline name editing -->
-        <form class="name-form hidden" id="nameForm">
-          <input type="text" id="nameInput" class="name-input" maxlength="40" placeholder="Type your name..." autocomplete="off" />
-          <div class="name-form-actions">
-            <button type="submit" class="btn-save" id="saveNameBtn" title="Save name">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </button>
-            <button type="button" class="btn-cancel" id="cancelNameBtn" title="Cancel">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-        </form>
-      </section>
-
-      <!-- Hero Clock Section -->
-      <section class="clock-section">
-        <div class="clock-display" id="clockDisplay">
-          <div class="clock-unit" id="hoursUnit">
-            <span class="clock-digit" id="hours">00</span>
-            <span class="clock-label">HOURS</span>
-          </div>
-          <span class="clock-separator">:</span>
-          <div class="clock-unit" id="minutesUnit">
-            <span class="clock-digit" id="minutes">00</span>
-            <span class="clock-label">MINUTES</span>
-          </div>
-          <span class="clock-separator">:</span>
-          <div class="clock-unit" id="secondsUnit">
-            <span class="clock-digit" id="seconds">00</span>
-            <span class="clock-label">SECONDS</span>
-          </div>
-          <div class="period-badge" id="periodBadge">
-            <span id="periodText">AM</span>
-          </div>
-        </div>
-
-        <!-- Seconds progress bar -->
-        <div class="seconds-progress-bar">
-          <div class="seconds-progress-fill" id="secondsProgress"></div>
-        </div>
-      </section>
-
-      <!-- Date and Timezone Footer -->
-      <footer class="card-footer">
-        <div class="date-chip">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
+        <button class="close-drawer-btn" id="closeDrawerBtn" title="Close drawer (ESC)" aria-label="Close drawer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
-          <span id="formattedDate">Loading date...</span>
-        </div>
+        </button>
+      </div>
 
-        <div class="timezone-chip">
-          <span class="status-dot"></span>
-          <span id="timezoneText">UTC</span>
-        </div>
-      </footer>
+      <div class="drawer-content">
+        <!-- Projects View -->
+        <section class="tab-pane active" id="paneProjects">
+          <div class="pane-header">
+            <h2 class="pane-title" id="drawerTitle">Featured AIoT Works</h2>
+            <p class="pane-subtitle">Data loaded asynchronously from <code>projects.json</code></p>
+          </div>
+          <div class="projects-grid" id="projectsGrid">
+            <!-- Dynamically populated by app.js -->
+            <div class="loading-indicator">Loading projects...</div>
+          </div>
+        </section>
+
+        <!-- About View -->
+        <section class="tab-pane" id="paneAbout">
+          <div class="about-card">
+            <div class="about-bio">
+              <h3>吳奕霆</h3>
+              <p class="about-role">AIoT Researcher, Educator & Systems Architect</p>
+              <p class="about-desc">
+                Specializing in the intersection of Artificial Intelligence and Internet of Things. 
+                Focusing on real-time embedded Edge AI, TinyML microcontrollers, industrial telemetry, 
+                and bridging low-level hardware sensors with cloud-native dashboards.
+              </p>
+            </div>
+
+            <div class="about-section">
+              <h4>Research & Focus Areas</h4>
+              <div class="skills-tags">
+                <span class="skill-tag">Edge AI Vision</span>
+                <span class="skill-tag">TinyML (ESP32/C++)</span>
+                <span class="skill-tag">LoRaWAN & BLE Mesh</span>
+                <span class="skill-tag">Industrial MQTT</span>
+                <span class="skill-tag">FastAPI & Microservices</span>
+                <span class="skill-tag">Digital Twins (Three.js)</span>
+              </div>
+            </div>
+
+            <div class="about-section">
+              <h4>Pedagogical Philosophy</h4>
+              <p class="about-philosophy">
+                <strong>Lecture 2 Web Progression</strong>: Guiding students from fundamental browser APIs to stateful data-driven applications, building the intuition required for L3 backend integration.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Connect View -->
+        <section class="tab-pane" id="paneConnect">
+          <div class="pane-header">
+            <h2 class="pane-title">Get In Touch</h2>
+            <p class="pane-subtitle">Connect for AIoT research, curriculum inquiries, and collaboration.</p>
+          </div>
+          <div class="connect-links">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="connect-card">
+              <div class="connect-icon-box">💻</div>
+              <div class="connect-info">
+                <div class="connect-name">GitHub</div>
+                <div class="connect-meta">@dds852456tw • Open Source & AIoT Repositories</div>
+              </div>
+              <span class="connect-arrow">↗</span>
+            </a>
+
+            <a href="mailto:dds852456tw@gmail.com" class="connect-card">
+              <div class="connect-icon-box">✉️</div>
+              <div class="connect-info">
+                <div class="connect-name">Academic Email</div>
+                <div class="connect-meta">dds852456tw@gmail.com</div>
+              </div>
+              <span class="connect-arrow">↗</span>
+            </a>
+
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="connect-card">
+              <div class="connect-icon-box">💼</div>
+              <div class="connect-info">
+                <div class="connect-name">LinkedIn</div>
+                <div class="connect-meta">Professional Profile & Updates</div>
+              </div>
+              <span class="connect-arrow">↗</span>
+            </a>
+
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="connect-card course-highlight">
+              <div class="connect-icon-box">🎓</div>
+              <div class="connect-info">
+                <div class="connect-name">AIoT 2026 Course Portal</div>
+                <div class="connect-meta">Lecture 2 (L2Web) • Materials & Assignments</div>
+              </div>
+              <span class="connect-arrow">↗</span>
+            </a>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <!-- Zen Mode Exit Prompt -->
+    <div class="zen-exit-hint" id="zenExitHint">
+      Press <kbd>ESC</kbd> or <kbd>Z</kbd> to exit Zen mode
     </div>
+
+    <!-- Toast Notification Banner -->
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+    <!-- Shortcuts Footer -->
+    <footer class="shortcuts-footer" id="shortcutsFooter">
+      <span>Shortcuts: <kbd>Z</kbd> Zen Mode • <kbd>T</kbd> 12/24H • <kbd>C</kbd> Copy Time • <kbd>ESC</kbd> Close Drawer</span>
+    </footer>
   </main>
 
   <script src="app.js"></script>
