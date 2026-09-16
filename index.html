@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Space & Live Clock</title>
+  <meta name="description" content="A modern, personal glassmorphic space featuring live high-precision clock, customizable name, and dynamic greeting.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow orb-1" id="orb1"></div>
+  <div class="ambient-glow orb-2" id="orb2"></div>
+  <div class="ambient-glow orb-3" id="orb3"></div>
+  <div class="mesh-grid"></div>
+
+  <main class="app-container">
+    <div class="glass-card" id="glassCard">
+      <!-- Top header bar -->
+      <header class="card-header">
+        <div class="greeting-badge" id="greetingBadge">
+          <span class="greeting-icon" id="greetingIcon">✨</span>
+          <span class="greeting-text" id="greetingText">Good Evening</span>
+        </div>
+
+        <div class="header-controls">
+          <button class="control-btn" id="formatToggleBtn" aria-label="Toggle 12/24 hour time format" title="Toggle 12h / 24h format">
+            <span class="toggle-pill" id="formatLabel">12H</span>
+          </button>
+          <button class="control-btn icon-only" id="copyTimeBtn" aria-label="Copy current time" title="Copy time to clipboard">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span class="tooltip" id="copyTooltip">Copy time</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Personal Identity Section -->
+      <section class="identity-section">
+        <div class="welcome-pre">Welcome to the personal space of</div>
+        <div class="name-display-wrapper" id="nameWrapper" tabindex="0" role="button" aria-label="Click or press Enter to edit your name">
+          <h1 class="user-name" id="userName" title="Click to edit your name">吳奕霆</h1>
+          <button class="edit-name-btn" id="editNameBtn" aria-label="Edit name" title="Edit your name">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="edit-hint" id="editHint">Click the name or pencil icon to personalize</p>
+
+        <!-- Hidden input form for inline name editing -->
+        <form class="name-form hidden" id="nameForm">
+          <input type="text" id="nameInput" class="name-input" maxlength="40" placeholder="Type your name..." autocomplete="off" />
+          <div class="name-form-actions">
+            <button type="submit" class="btn-save" id="saveNameBtn" title="Save name">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="btn-cancel" id="cancelNameBtn" title="Cancel">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Hero Clock Section -->
+      <section class="clock-section">
+        <div class="clock-display" id="clockDisplay">
+          <div class="clock-unit" id="hoursUnit">
+            <span class="clock-digit" id="hours">00</span>
+            <span class="clock-label">HOURS</span>
+          </div>
+          <span class="clock-separator">:</span>
+          <div class="clock-unit" id="minutesUnit">
+            <span class="clock-digit" id="minutes">00</span>
+            <span class="clock-label">MINUTES</span>
+          </div>
+          <span class="clock-separator">:</span>
+          <div class="clock-unit" id="secondsUnit">
+            <span class="clock-digit" id="seconds">00</span>
+            <span class="clock-label">SECONDS</span>
+          </div>
+          <div class="period-badge" id="periodBadge">
+            <span id="periodText">AM</span>
+          </div>
+        </div>
+
+        <!-- Seconds progress bar -->
+        <div class="seconds-progress-bar">
+          <div class="seconds-progress-fill" id="secondsProgress"></div>
+        </div>
+      </section>
+
+      <!-- Date and Timezone Footer -->
+      <footer class="card-footer">
+        <div class="date-chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span id="formattedDate">Loading date...</span>
+        </div>
+
+        <div class="timezone-chip">
+          <span class="status-dot"></span>
+          <span id="timezoneText">UTC</span>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
